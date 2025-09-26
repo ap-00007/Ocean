@@ -3,6 +3,11 @@ from flask_cors import CORS
 import requests
 import time
 import logging
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
@@ -10,8 +15,8 @@ CORS(app)
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-GOPHER_API_URL = "https://data.gopher-ai.com/api/v1/search/live/twitter"
-GOPHER_AUTH_TOKEN = "Cwq3eiwszKKMpNjvLBBsTiHnSA3meann7qHoUpHStYJH7XHx"
+GOPHER_API_URL = os.getenv('GOPHER_API_URL', 'https://data.gopher-ai.com/api/v1/search/live/twitter')
+GOPHER_AUTH_TOKEN = os.getenv('GOPHER_AUTH_TOKEN')
 
 @app.route('/api/twitter/search', methods=['POST'])
 def twitter_search():
@@ -63,6 +68,16 @@ def twitter_result(job_uuid):
         logger.error(f"Result Error: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
+@app.route('/api/config', methods=['GET'])
+def get_config():
+    """Provide client-side configuration (non-sensitive data only)"""
+    return jsonify({
+        'supabase': {
+            'url': os.getenv('SUPABASE_URL'),
+            'anonKey': os.getenv('SUPABASE_ANON_KEY')
+        }
+    })
+
 @app.route('/')
 def serve_dashboard():
     return send_file('samudradashboard.html')
@@ -72,4 +87,7 @@ def serve_static(filename):
     return send_file(filename)
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5002)
+    debug_mode = os.getenv('FLASK_DEBUG', 'False').lower() == 'true'
+    host = os.getenv('FLASK_HOST', '0.0.0.0')
+    port = int(os.getenv('FLASK_PORT', '5002'))
+    app.run(debug=debug_mode, host=host, port=port)

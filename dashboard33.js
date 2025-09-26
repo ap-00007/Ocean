@@ -13,11 +13,30 @@ let hazardPieChart, comparisonBarChart, trendLineChart;
 let currentTab = 'dashboard';
 let reportChannel, alertChannel;
 
-// Supabase configuration
-const SUPABASE_URL = 'https://mnejfugdushmrwzocxlx.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1uZWpmdWdkdXNobXJ3em9jeGx4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc5Mjg1ODMsImV4cCI6MjA3MzUwNDU4M30.XsAaOz53omvyBB9yPBLuTjmSYBrY4GBinqKbYPrup8w';
-const { createClient } = supabase;
-const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// Supabase configuration - will be loaded from API
+let SUPABASE_URL = '';
+let SUPABASE_ANON_KEY = '';
+let supabaseClient;
+
+// Load configuration from server
+async function loadConfig() {
+    try {
+        const response = await fetch('/api/config');
+        const config = await response.json();
+        SUPABASE_URL = config.supabase.url;
+        SUPABASE_ANON_KEY = config.supabase.anonKey;
+        
+        // Initialize Supabase client after loading config
+        const { createClient } = supabase;
+        supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        console.log('Configuration loaded successfully');
+        return true;
+    } catch (error) {
+        console.error('Failed to load configuration:', error);
+        return false;
+    }
+}
 
 // Cache for reverse geocoding
 const geocodeCache = new Map();
@@ -122,6 +141,12 @@ document.addEventListener('DOMContentLoaded', async function() {
     if (!user) return;
 
     try {
+        // Load configuration first
+        const configLoaded = await loadConfig();
+        if (!configLoaded) {
+            throw new Error('Failed to load configuration');
+        }
+        
         setupEventListeners();
         initCharts();
         await waitForMapContainer('map', initializeMaps);
