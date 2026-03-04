@@ -193,9 +193,6 @@ python app.py
 4. Test thoroughly
 5. Submit a pull request
 
-## 📝 License
-
-[Add your license information here]
 
 ## 🆘 Support
 
@@ -205,5 +202,3 @@ For issues and questions:
 - Review the configuration guide
 
 ---
-
-**Note**: This application is designed for maritime safety monitoring. Ensure proper API keys and permissions are configured before deployment.
