@@ -22,7 +22,7 @@ A comprehensive maritime safety dashboard that provides real-time monitoring of 
 
 1. **Clone the repository**
    ```bash
-   git clone <your-repo-url>
+   git clone https://github.com/ap-00007/Ocean.git
    cd PROJECT
    ```
 
