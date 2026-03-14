@@ -50,27 +50,7 @@ A comprehensive maritime safety dashboard that provides real-time monitoring of 
 
 6. **Access the application**
    - Open your browser and navigate to: `http://localhost:5002`
-
-## 🔧 Configuration
-
-### Environment Variables
-
-Create a `.env` file in the project root with the following variables:
-
-```env
-# Gopher API Configuration
-GOPHER_API_URL=https://data.gopher-ai.com/api/v1/search/live/twitter
-GOPHER_AUTH_TOKEN=your_gopher_auth_token_here
-
-# Supabase Configuration
-SUPABASE_URL=your_supabase_url_here
-SUPABASE_ANON_KEY=your_supabase_anon_key_here
-
-# Flask Configuration
-FLASK_DEBUG=True
-FLASK_HOST=0.0.0.0
-FLASK_PORT=5002
-```
+   
 
 ### Required API Keys
 
